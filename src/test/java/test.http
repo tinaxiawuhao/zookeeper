@@ -1,4 +1,4 @@
-POST http://localhost:8091/zk/create/0/node_3
+POST http://localhost:8091/zk/create/0/node_1
 Content-Type: application/x-www-form-urlencoded
 
 nodeData=test20201224
@@ -8,7 +8,7 @@ nodeData=test20201224
 POST http://localhost:8091/zk/update
 Content-Type: application/x-www-form-urlencoded
 
-nodeData=12121212&znode=node
+nodeData=test121212&znode=node_1
 
 ###
 
@@ -24,7 +24,7 @@ GET http://localhost:8091/zk/delete?znode=node_2
 POST http://localhost:8091/zk/watchPath
 Content-Type: application/x-www-form-urlencoded
 
-znode=node
+znode=node_1
 ###
 
 GET http://localhost:8091/zk/writeLock?znode=node_2&lockType=0

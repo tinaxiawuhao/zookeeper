@@ -71,7 +71,7 @@ public class ZkClient {
         client = builder.build();
         client.start();
 
-        initLocalCache("/test");
+        initLocalCache("/"+zookeeperProperties.getNamespace());
         //   addConnectionStateListener();
 
 
