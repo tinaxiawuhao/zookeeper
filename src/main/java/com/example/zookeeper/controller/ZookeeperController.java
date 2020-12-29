@@ -140,9 +140,13 @@ public class ZookeeperController {
         };
  
         if(lockType == 0 ){
-            new Thread(writeRunnable).start();
+            for (int i = 0; i < 10; i++) {
+                new Thread(writeRunnable).start();
+            }
         }else if(lockType == 1){
-            new Thread(readRunnable).start();
+            for (int i = 0; i < 10; i++) {
+                new Thread(readRunnable).start();
+            }
         }
         return "success";
     }
