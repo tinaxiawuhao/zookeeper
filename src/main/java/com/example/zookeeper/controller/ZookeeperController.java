@@ -32,7 +32,7 @@ public class ZookeeperController {
  
     @Autowired
     private ZkClient zkClient;
- 
+
     /**
      * 创建节点
      * @param type
@@ -56,7 +56,7 @@ public class ZookeeperController {
         }
         return znode;
     }
- 
+
     /**
      * 设置节点数据
      * @param znode
@@ -73,7 +73,7 @@ public class ZookeeperController {
         zkClient.setNodeData(znode,nodeData.getBytes());
         return "sucess";
     }
- 
+
     @ApiOperation(value = "删除节点",notes = "删除节点")
     @ApiImplicitParams({
             @ApiImplicitParam(name ="znode",value = "节点名称",paramType = "query",required = true,dataType = "String")
@@ -84,7 +84,7 @@ public class ZookeeperController {
         zkClient.deleteNode(znode);
         return "success";
     }
- 
+
     @ApiOperation(value = "查找节点的内容",notes = "查找节点的内容")
     @ApiImplicitParams({
             @ApiImplicitParam(name ="znode",value = "节点名称",paramType = "body",required = true,dataType = "String")
@@ -95,7 +95,7 @@ public class ZookeeperController {
         byte[] b =  zkClient.getNodeData(znode);
         return new String(b);
     }
- 
+
     /**
      * 给节点添加读写锁
      * @param znode
@@ -121,7 +121,7 @@ public class ZookeeperController {
                 Thread.sleep(10_000);
                 System.out.println("write release");
                 writeLock.release();
- 
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -138,7 +138,7 @@ public class ZookeeperController {
                 e.printStackTrace();
             }
         };
- 
+
         if(lockType == 0 ){
             for (int i = 0; i < 10; i++) {
                 new Thread(writeRunnable).start();
@@ -150,7 +150,7 @@ public class ZookeeperController {
         }
         return "success";
     }
- 
+
     /**
      * 监听节点
      * @param znode
@@ -166,14 +166,14 @@ public class ZookeeperController {
         zkClient.watchPath(znode,(client1, event) ->{
             log.info("event:" + event.getType() +
                     " |path:" + (null != event.getData() ? event.getData().getPath() : null));
- 
+
             if(event.getData()!=null && event.getData().getData()!=null){
                 log.info("发生变化的节点内容为：" + new String(event.getData().getData()));
             }
         });
         return "success";
     }
- 
+
     /**
      * 测试计算器
      * 并发越高耗时越长
@@ -214,7 +214,7 @@ public class ZookeeperController {
                     }
                     List<Future<Boolean>> futures = executor.invokeAll(callList);
                 } catch (Exception e) {
- 
+
                 }
             };
             //测试分布式int类型的计数器
@@ -225,7 +225,7 @@ public class ZookeeperController {
         }
         return "success："+baseCount.getCount();
     }
- 
+
     /**
      * DistributedAtomicLong计数器可以自己设置重试的次数与间隔
      * 并发越高耗时越长
@@ -258,13 +258,13 @@ public class ZookeeperController {
                 }
                 List<Future<Boolean>> futures = executor.invokeAll(callList);
             } catch (Exception e) {
- 
+
             }
         };
         consumer.accept(distributedAtomicLong);
         return "success："+distributedAtomicLong.get().postValue();
     }
-    
+
      /**
      *
      * @return
@@ -279,5 +279,5 @@ public class ZookeeperController {
         zkClient.createNode(CreateMode.fromFlag(1),"/test/hello_service3","http://1270.0.1:8003/");
         return zkClient.getRandomData("/test");
     }
- 
+
 }

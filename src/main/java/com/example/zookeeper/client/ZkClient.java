@@ -34,15 +34,15 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class ZkClient {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
- 
+
     private CuratorFramework client;
     public TreeCache cache;
     private ZookeeperProperties zookeeperProperties;
- 
+
     public ZkClient(ZookeeperProperties zookeeperProperties){
         this.zookeeperProperties = zookeeperProperties;
     }
- 
+
     /**
      * 初始化zookeeper客户端
      */
@@ -89,7 +89,7 @@ public class ZkClient {
             }
         });
     }
- 
+
     /**
      * 初始化本地缓存
      * @param watchRootPath
@@ -100,27 +100,27 @@ public class ZkClient {
         TreeCacheListener listener = (client1, event) ->{
             log.info("event:" + event.getType() +
                     " |path:" + (null != event.getData() ? event.getData().getPath() : null));
- 
+
             if(event.getData()!=null && event.getData().getData()!=null){
                 log.info("发生变化的节点内容为：" + new String(event.getData().getData()));
             }
- 
+
            // client1.getData().
         };
         cache.getListenable().addListener(listener);
         cache.start();
     }
- 
- 
+
+
     public void stop() {
         client.close();
     }
- 
+
     public CuratorFramework getClient() {
         return client;
     }
- 
- 
+
+
     /**
      * 创建节点
      * @param mode       节点类型
@@ -139,7 +139,7 @@ public class ZkClient {
             logger.error("注册出错", e);
         }
     }
- 
+
     /**
      * 创建节点
      * @param mode       节点类型
@@ -157,7 +157,7 @@ public class ZkClient {
             logger.error("注册出错", e);
         }
     }
- 
+
     /**
      * 删除节点数据
      *
@@ -170,8 +170,8 @@ public class ZkClient {
             log.error("{}",ex);
         }
     }
- 
- 
+
+
     /**
      * 删除节点数据
      * @param path
@@ -190,8 +190,8 @@ public class ZkClient {
             log.error("删除节点错误{}",e);
         }
     }
- 
- 
+
+
     /**
      * 设置指定节点的数据
      * @param path
@@ -204,7 +204,7 @@ public class ZkClient {
             log.error("修改节点数据{}",ex);
         }
     }
- 
+
     /**
      * 获取指定节点的数据
      * @param path
@@ -226,7 +226,7 @@ public class ZkClient {
         }
         return null;
     }
- 
+
     /**
      * 获取数据时先同步
      * @param path
@@ -236,7 +236,7 @@ public class ZkClient {
         client.sync();
         return getNodeData( path);
     }
- 
+
     /**
      * 判断路径是否存在
      *
@@ -251,8 +251,8 @@ public class ZkClient {
             return false;
         }
     }
- 
- 
+
+
     /**
      * 获取节点的子节点
      * @param path
@@ -267,7 +267,7 @@ public class ZkClient {
         }
         return childrenList;
     }
- 
+
     /**
 	 * 随机读取一个path子路径, "/"为根节点对应该namespace
 	 * 先从cache中读取，如果没有，再从zookeeper中查询
@@ -307,9 +307,9 @@ public class ZkClient {
 			log.error("{}",e);
 		}
 		return null;
- 
+
 	}
- 
+
 	/**
 	 * 可重入共享锁  -- Shared Reentrant Lock
 	 * @param lockPath
@@ -338,7 +338,7 @@ public class ZkClient {
 //        }
 //		return null;
 //	}
- 
+
     /**
      * 获取读写锁
      * @param path
@@ -348,12 +348,12 @@ public class ZkClient {
         InterProcessReadWriteLock readWriteLock = new InterProcessReadWriteLock(client, path);
         return readWriteLock;
     }
- 
+
     /**
      * 在注册监听器的时候，如果传入此参数，当事件触发时，逻辑由线程池处理
      */
     ExecutorService pool = Executors.newFixedThreadPool(2);
- 
+
     /**
      * 监听数据节点的变化情况
      * @param watchPath
@@ -369,5 +369,5 @@ public class ZkClient {
             log.error("监听数据节点错误{}",e);
         }
     }
- 
+
 }
